@@ -54,19 +54,19 @@ struct SlotMachineView: View {
                         .padding()
                 }
                 HStack {
-                    ImageButton(image: "bet10", action: /* add your action here */ {})
+                    ImageButton(image: "bet10", action:  {})
                         .padding(5)
-                    ImageButton(image: "bet50", action: /* add your action here */ {})
+                    ImageButton(image: "bet50", action:  {})
                         .padding(5)
-                    ImageButton(image: "bet100", action: /* add your action here */ {})
+                    ImageButton(image: "bet100", action:  {})
                         .padding(5)
                 }
                 .padding()
-                ImageButton(image: "spin", action: /* add your action here */ {})
+                ImageButton(image: "spin", action:  {})
                 HStack {
-                    ImageButton(image: "reset", action: /* add your action here */ {})
+                    ImageButton(image: "reset", action: {})
                     Spacer()
-                    ImageButton(image: "quit", action: /* add your action here */ {})
+                    ImageButton(image: "quit", action:  {})
                 }
                 .padding()
             }
