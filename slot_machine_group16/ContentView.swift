@@ -42,7 +42,7 @@ struct ContentView: View {
                 }
             .padding()
         }
-        .sheet(isPresented: $showSlotMachine, content: {
+        .fullScreenCover(isPresented: $showSlotMachine, content: {
             SlotMachineView()
                 .edgesIgnoringSafeArea(.all)
         })

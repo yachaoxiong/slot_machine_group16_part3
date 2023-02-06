@@ -25,24 +25,27 @@ struct SlotMachineView: View {
     @State private var jackpot = 10000
     @State private var credit = 2000
     @State private var bet = 10
+    @State private var showAlert = false
+    
     var spinEnabled: Bool {
         return credit >= bet
     }
 
     @Environment(\.presentationMode) var presentationMode
-    
+    @Environment(\.dismiss) private var dismiss
     var body: some View {
         ScrollView{
             ZStack {
                 LinearGradient(gradient: Gradient(colors: [Color(red: 0.8, green: 0, blue: 0), Color(red: 0.8, green: 0.4, blue: 0.2)]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .edgesIgnoringSafeArea(.all)
                 VStack {
+                    Spacer()
                     VStack {
                         Image("jackpot")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 300, height: 60)
-                            .padding(5)
+                            .padding(50)
                         InfoCardView(title: "", value:String(jackpot),width: 320, height: 80)
                     }
                     HStack {
@@ -88,14 +91,22 @@ struct SlotMachineView: View {
                     ImageButton(image: spinEnabled ? "spin" : "spinGray", action:  {
                         self.spin()
                     },isEnabled:spinEnabled)
+                    .alert(isPresented: $showAlert) {
+                        Alert(title: Text("Congratulations！！！You Win Jackpot"),
+                                        message: Text(" "),
+                                        dismissButton: .default(Text("Close")))
+                    }
                     HStack {
                         ImageButton(image: "reset", action: {
                             self.reset()
                         },isEnabled:true)
                         Spacer()
-                        ImageButton(image: "quit", action:  {},isEnabled:true)
+                        ImageButton(image: "quit", action:  {
+                            presentationMode.wrappedValue.dismiss()
+                        },isEnabled:true)
                     }
                     .padding()
+                   
                 }
             }
         }
@@ -110,6 +121,8 @@ struct SlotMachineView: View {
     if self.images[0] == self.images[1] && self.images[1] == self.images[2] {
         if(self.images[0] == "bar") {
             self.result = jackpot
+            self.result += bet * 20
+            showAlert = true
           }else if(self.images[0] == "clover") {
               self.result = bet * 20
           }else{
@@ -120,11 +133,17 @@ struct SlotMachineView: View {
   }
 
   private func reset() {
-    
+        self.bet = 10
+        self.result = 0
+        self.credit = 2000
+        for i in 0...2 {
+        self.images[i] = "blank"
+        }
    }
     
  private func quit() {
-    //
+     print("quit...")
+     presentationMode.wrappedValue.dismiss()
   }
  struct CardView: View {
         var image: String
@@ -179,6 +198,34 @@ struct SlotMachineView: View {
             }.disabled(!isEnabled)
         }
        
+    }
+    
+ struct CustomAlertView: View {
+        @Binding var isPresented: Bool
+        var title: String
+        var message: String
+        var buttonText: String
+        
+        var body: some View {
+            VStack {
+                Text(title)
+                    .font(.title)
+                    .padding()
+                Text(message)
+                    .font(.body)
+                    .padding()
+                Button(action: {
+                    self.isPresented = false
+                }) {
+                    Text(buttonText)
+                        .font(.headline)
+                        .padding()
+                }
+            }
+            .background(Color.white)
+            .cornerRadius(20)
+            .shadow(radius: 10)
+        }
     }
     
 }
