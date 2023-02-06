@@ -5,9 +5,14 @@
 //  Author Name: Yachao xiong 301298033, Sao I, Kuan 301204757
 //
 //  Revision
+//  v1.0
 //  init project                            2023-01-22.
 //  added welcome screen                    2023-01-22.
 //  added slot machine screen               2023-01-22.
+//  v2.0
+//  added spin function                                     2023-02-05
+//  updated spin function and added quit function           2023-02-05
+//  add version infor                                       2023-02-05
 //
 //
 //  About the APP
@@ -111,7 +116,7 @@ struct SlotMachineView: View {
             }
         }
     }
-    private func spin() {
+private func spin() {
     self.result = 0
     self.credit -= self.bet
     let images = ["blueberry", "banana", "apple", "bar", "clover"]
@@ -122,6 +127,7 @@ struct SlotMachineView: View {
         if(self.images[0] == "bar") {
             self.result = jackpot
             self.result += bet * 20
+            self.jackpot = 0
             showAlert = true
           }else if(self.images[0] == "clover") {
               self.result = bet * 20
@@ -140,11 +146,7 @@ struct SlotMachineView: View {
         self.images[i] = "blank"
         }
    }
-    
- private func quit() {
-     print("quit...")
-     presentationMode.wrappedValue.dismiss()
-  }
+
  struct CardView: View {
         var image: String
         var body: some View {

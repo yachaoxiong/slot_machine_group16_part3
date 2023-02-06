@@ -5,10 +5,15 @@
 //  Author Name: Yachao xiong 301298033, Sao I, Kuan 301204757
 //
 //  Revision
+//  v1.0
 //  init project                            2023-01-22.
 //  added welcome screen                    2023-01-22.
 //  added slot machine screen               2023-01-22.
-//  added app info                          2023-01-22.
+//  v2.0
+//  added spin function                                     2023-02-05
+//  updated spin function and added quit function           2023-02-05
+//  add version infor                                       2023-02-05
+//
 //
 //  About the APP
 //  The slot machine app generates a game of chance by randomly selecting symbols on reels,
