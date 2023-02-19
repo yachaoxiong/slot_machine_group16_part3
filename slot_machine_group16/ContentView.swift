@@ -21,8 +21,11 @@
 //  and they vary in themes, pay lines
 //
 import SwiftUI
+import Firebase
+
 
 struct ContentView: View {
+  
     @State var showSlotMachine = false
     var body: some View {
         VStack {
@@ -51,6 +54,9 @@ struct ContentView: View {
             SlotMachineView()
                 .edgesIgnoringSafeArea(.all)
         })
+    }
+    func addNewUser(){
+        
     }
 }
 

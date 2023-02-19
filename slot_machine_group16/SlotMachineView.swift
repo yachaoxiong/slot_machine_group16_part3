@@ -21,7 +21,6 @@
 //  and they vary in themes, pay lines
 //
 //
-
 import SwiftUI
 
 struct SlotMachineView: View {
@@ -29,13 +28,18 @@ struct SlotMachineView: View {
     @State private var result = 0
     @State private var jackpot = 10000
     @State private var credit = 2000
+    @State private var highScore = 0
     @State private var bet = 10
     @State private var showAlert = false
+    @State var showSlotMachine = false
     
+    private let dataManager = DataManager()
+  
+ 
     var spinEnabled: Bool {
         return credit >= bet
     }
-
+   
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) private var dismiss
     var body: some View {
@@ -52,6 +56,10 @@ struct SlotMachineView: View {
                             .frame(width: 300, height: 60)
                             .padding(50)
                         InfoCardView(title: "", value:String(jackpot),width: 320, height: 80)
+                    }
+                    VStack {
+                        Spacer()
+                        InfoCardView(title: "High Score", value:String(highScore),width: 320, height: 40)
                     }
                     HStack {
                         CardView(image: images[0])
@@ -109,14 +117,34 @@ struct SlotMachineView: View {
                         ImageButton(image: "quit", action:  {
                             presentationMode.wrappedValue.dismiss()
                         },isEnabled:true)
+                        Spacer()
+                        ImageButton(image: "help", action: {
+                            showSlotMachine.toggle()
+                        },isEnabled:true)
                     }
                     .padding()
                    
                 }
             }
         }
+        .fullScreenCover(isPresented: $showSlotMachine, content: {
+                    HelpView()
+                        .edgesIgnoringSafeArea(.all)
+        })
     }
+private func initJackpot(){
+    dataManager.fetchValue(forKey: "Jackpot") { value in
+                       if let value = value {
+                           if let jackpotValue = Int(value) {
+                               self.jackpot = jackpotValue
+                           }
+                       }
+        }
+}
+    
+
 private func spin() {
+    initJackpot()
     self.result = 0
     self.credit -= self.bet
     let images = ["blueberry", "banana", "apple", "bar", "clover"]
@@ -128,13 +156,21 @@ private func spin() {
             self.result = jackpot
             self.result += bet * 20
             self.jackpot = 0
+            dataManager.setJackpot(String(self.jackpot))
             showAlert = true
+            updateHighScore(newValue: self.result)
           }else if(self.images[0] == "clover") {
               self.result = bet * 20
+              updateHighScore(newValue: self.result)
           }else{
               self.result = bet * 10
+              updateHighScore(newValue: self.result)
           }
       }
+        if(self.result == 0){
+            self.jackpot += self.bet
+            dataManager.setJackpot(String(self.jackpot))
+        }
       self.credit += self.result
   }
 
@@ -146,6 +182,18 @@ private func spin() {
         self.images[i] = "blank"
         }
    }
+    private func updateHighScore(newValue: Int){
+        dataManager.fetchValue(forKey: "HighScore") { value in
+                           if let value = value {
+                               if let cHighScore = Int(value) {
+                                   if(newValue > cHighScore){
+                                       self.highScore = newValue
+                                       dataManager.setJackpot(String(newValue))
+                                   }
+                            }
+                    }
+            }
+}
 
  struct CardView: View {
         var image: String
